@@ -92,6 +92,18 @@ The repository settings (**Settings**, **Secrets and variables**, **Actions**):
 | `GOOGLE_CLIENT_SECRET`  | secret   | That client's secret.                                                                                                                                                                                                  |
 | `IDENTITY_BROKER_KEYS`  | secret   | The signing keys: the key set that the package README's [command](https://github.com/samebase/samebase/blob/main/packages/identity-broker/README.md#environment-variables) prints. Keep a copy: GitHub cannot show it. |
 
+| `IDENTITY_BROKER_MODERATION_KEY` | secret | A long random value, for example from
+`openssl rand -hex 32`. Keep a copy: it is the Bearer token of the moderation API. |
+
+### Block a host
+
+The
+[moderation API](https://github.com/samebase/samebase/blob/main/packages/identity-broker/README.md#moderation)
+is at `https://login.samebase.com/moderation/`, with the moderation key as a Bearer token.
+`POST /moderation/host-blocks` with `{ "action": "block", "host": "bad.example" }` stops every
+sign-in of the sites on that host; `"unblock"` removes the block. `GET /moderation/host-blocks`
+lists the blocks, and `GET /moderation/clients` lists the newest sites.
+
 ### Rotate the signing keys
 
 Make a new key set with the command. To keep the tokens of the last minutes valid, add the old

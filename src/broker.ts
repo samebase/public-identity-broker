@@ -1,11 +1,13 @@
 // The broker Worker: `@samebase/identity-broker` with Google and the Client ID Metadata Document
 // layer for any host, behind a limit for each caller on `/authorize` (src/limit.ts). The signing
 // keys are the package's default, the secret IDENTITY_BROKER_KEYS. `alchemy deploy` binds the three
-// secrets to the Worker from the deploying shell's variables of the same names.
+// secrets to the Worker from the deploying shell's variables of the same names; alchemy.run.ts binds
+// the moderation key, which the broker reads in each request.
 import * as Cloudflare from "@alchemy.run/cloudflare";
 import { identityBroker } from "@samebase/identity-broker";
 import { DurableObjectStore, brokerWorkerProps } from "@samebase/identity-broker/cloudflare";
 import * as Connectors from "@samebase/identity-broker/connectors";
+import { moderation } from "@samebase/identity-broker/moderation";
 import * as Registration from "@samebase/identity-broker/registration";
 import { Config, Effect } from "effect";
 import { AUTHORIZE_LIMIT, limitAuthorize } from "./limit.ts";
@@ -37,6 +39,7 @@ export default class Broker extends Cloudflare.Worker<Broker>()(
         }),
       ],
       registration: Registration.clientIdMetadataDocuments(),
+      moderation: moderation({ key: Config.Redacted("IDENTITY_BROKER_MODERATION_KEY") }),
       service: {
         name: "Samebase",
         terms: "https://samebase.com/terms",

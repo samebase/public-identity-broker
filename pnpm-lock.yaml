@@ -177,8 +177,8 @@ importers:
   .:
     dependencies:
       '@samebase/identity-broker':
-        specifier: 0.45.0
-        version: 0.45.0(@alchemy.run/cloudflare@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@types/node@26.6.6)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(effect@4.1.4)(typescript@7.0.2))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(convex@1.48.0)(effect@4.1.4)
+        specifier: 0.46.0
+        version: 0.46.0(@alchemy.run/cloudflare@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@types/node@26.6.6)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(effect@4.1.4)(typescript@7.0.2))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(convex@1.48.0)(effect@4.1.4)
       effect:
         specifier: 4.1.4
         version: 4.1.4
@@ -1213,8 +1213,8 @@ packages:
       alchemy: 2.0.0-beta.87
       effect: ^4.1.4
 
-  '@samebase/identity-broker@0.45.0':
-    resolution: {integrity: sha512-vVXD/Tqdl669I6hVPXuouEtbuTsOsPk5LRQK3SnlVH+PorSV1rJgx+sbumMsfQmUhqv+GK6khcqO3x/lj5UJZw==}
+  '@samebase/identity-broker@0.46.0':
+    resolution: {integrity: sha512-O1V0gXCE+xyz8XLeZFqXbcavTxM4k8RosuSzZSXDxIZdsSimsUqK2d9rkfPWqLxK/D7hHIPoHoiv2LePpkW3ZA==}
     engines: {node: '>=24.11.0'}
     peerDependencies:
       '@alchemy.run/cloudflare': 2.0.0-beta.87
@@ -2775,7 +2775,7 @@ snapshots:
       alchemy: 2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0)
       effect: 4.1.4
 
-  '@samebase/identity-broker@0.45.0(@alchemy.run/cloudflare@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@types/node@26.6.6)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(effect@4.1.4)(typescript@7.0.2))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(convex@1.48.0)(effect@4.1.4)':
+  '@samebase/identity-broker@0.46.0(@alchemy.run/cloudflare@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@types/node@26.6.6)(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(effect@4.1.4)(typescript@7.0.2))(alchemy@2.0.0-beta.87(@effect/platform-node@4.1.4(effect@4.1.4)(redis@6.4.0))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.6)(esbuild@0.27.0)(typescript@7.0.2)(yaml@2.9.1))(effect@4.1.4)(ws@8.23.0))(convex@1.48.0)(effect@4.1.4)':
     dependencies:
       effect: 4.1.4
       jose: 6.2.13

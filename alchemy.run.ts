@@ -2,13 +2,13 @@
 // at https://login.samebase.com. The stack is named after the repository; its state is in the
 // team's Convex store (`alchemy-state-store`). A run needs CONVEX_ACCESS_TOKEN,
 // CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, and the broker's secrets GOOGLE_CLIENT_ID,
-// GOOGLE_CLIENT_SECRET and IDENTITY_BROKER_KEYS.
+// GOOGLE_CLIENT_SECRET, IDENTITY_BROKER_KEYS and IDENTITY_BROKER_MODERATION_KEY.
 import { execFileSync } from "node:child_process";
 import process from "node:process";
 import * as Cloudflare from "@alchemy.run/cloudflare";
 import * as Convex from "@samebase/alchemy-convex";
 import * as Alchemy from "alchemy";
-import * as Effect from "effect/Effect";
+import { Config, Effect } from "effect";
 import Broker from "./src/broker.ts";
 
 /** The GitHub repository, `owner/name`: GITHUB_REPOSITORY in Actions, else the origin remote. */
@@ -31,6 +31,12 @@ export default Alchemy.Stack(
       throw new Error(`This stack has one stage, prod. The stage ${stage} is not deployed.`);
     }
     const broker = yield* Broker;
+    // The broker reads the moderation key in each request, so the stack binds it.
+    yield* broker.bind("ModerationKey", {
+      env: {
+        IDENTITY_BROKER_MODERATION_KEY: yield* Config.Redacted("IDENTITY_BROKER_MODERATION_KEY"),
+      },
+    });
     return { url: broker.url };
   }),
 );

@@ -13,8 +13,8 @@ The public identity broker at `https://login.samebase.com`: a Cloudflare Worker 
   no pull request previews: Google accepts only the exact callback address.
 - The Worker's name, `public-identity-broker`, and the package's Durable Object names are the
   address of all the broker's data. Do not rename them.
-- The secrets `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` and `IDENTITY_BROKER_KEYS` reach the Worker
-  from the deploying shell's variables of those names. Never put a value in a file of this
-  repository or in a log.
+- The secrets `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `IDENTITY_BROKER_KEYS` and
+  `IDENTITY_BROKER_MODERATION_KEY` reach the Worker from the deploying shell's variables of those
+  names. Never put a value in a file of this repository or in a log.
 - Never use the U+2014 em dash character. No `any`, no type assertions except `as const`.
 - `pnpm install`, then `pnpm run check`.
