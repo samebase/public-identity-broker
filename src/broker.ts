@@ -10,6 +10,7 @@ import * as Connectors from "@samebase/identity-broker/connectors";
 import { moderation } from "@samebase/identity-broker/moderation";
 import * as Registration from "@samebase/identity-broker/registration";
 import { Config, Effect } from "effect";
+import { withHome } from "./home.ts";
 import { AUTHORIZE_LIMIT, limitAuthorize } from "./limit.ts";
 
 const ISSUER = "https://login.samebase.com";
@@ -51,14 +52,16 @@ export default class Broker extends Cloudflare.Worker<Broker>()(
       },
     });
     return {
-      fetch: limitAuthorize(
-        (key) =>
-          limit.limit({ key }).pipe(
-            Effect.map((outcome) => outcome.success),
-            // The limiter is down: let the request in. The broker's own budgets still hold.
-            Effect.orElseSucceed(() => true),
-          ),
-        broker.fetch,
+      fetch: withHome(
+        limitAuthorize(
+          (key) =>
+            limit.limit({ key }).pipe(
+              Effect.map((outcome) => outcome.success),
+              // The limiter is down: let the request in. The broker's own budgets still hold.
+              Effect.orElseSucceed(() => true),
+            ),
+          broker.fetch,
+        ),
       ),
     };
   }).pipe(Effect.provide(DurableObjectStore), Effect.provide(Cloudflare.Workers.RateLimitBinding)),
