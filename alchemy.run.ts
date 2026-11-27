@@ -2,7 +2,8 @@
 // at https://login.samebase.com. The stack is named after the repository; its state is in the
 // team's Convex store (`alchemy-state-store`). A run needs CONVEX_ACCESS_TOKEN,
 // CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, and the broker's secrets GOOGLE_CLIENT_ID,
-// GOOGLE_CLIENT_SECRET, IDENTITY_BROKER_KEYS and IDENTITY_BROKER_MODERATION_KEY.
+// GOOGLE_CLIENT_SECRET, AUTH_GITHUB_CLIENT_ID, AUTH_GITHUB_CLIENT_SECRET, IDENTITY_BROKER_KEYS and
+// IDENTITY_BROKER_MODERATION_KEY.
 import { execFileSync } from "node:child_process";
 import process from "node:process";
 import * as Cloudflare from "@alchemy.run/cloudflare";
@@ -26,7 +27,7 @@ export default Alchemy.Stack(
   { providers: Cloudflare.providers(), state: Convex.withRunRecord(Convex.state()) },
   Effect.gen(function* () {
     const { stage } = yield* Alchemy.Stack;
-    // One stage: Google accepts only the exact callback address of login.samebase.com.
+    // One stage: Google and GitHub accept only the exact callback address of login.samebase.com.
     if (stage !== "prod") {
       throw new Error(`This stack has one stage, prod. The stage ${stage} is not deployed.`);
     }

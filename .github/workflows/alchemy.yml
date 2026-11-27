@@ -1,6 +1,6 @@
 # Deploys the broker with Alchemy (alchemy.run.ts): a push to main, or Run workflow on main after a
 # secret changed, deploys the stage `prod`, the Worker at https://login.samebase.com, and nothing
-# else. No pull request gets a preview: Google accepts only the exact callback address. The state is
+# else. No pull request gets a preview: a provider accepts only the exact callback address. The state is
 # in the `alchemy-state-store` project of the Convex team, under the stack name GITHUB_REPOSITORY.
 # Only the Alchemy step gets the secrets.
 name: alchemy
@@ -60,5 +60,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          AUTH_GITHUB_CLIENT_ID: ${{ secrets.AUTH_GITHUB_CLIENT_ID }}
+          AUTH_GITHUB_CLIENT_SECRET: ${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}
           IDENTITY_BROKER_KEYS: ${{ secrets.IDENTITY_BROKER_KEYS }}
           IDENTITY_BROKER_MODERATION_KEY: ${{ secrets.IDENTITY_BROKER_MODERATION_KEY }}

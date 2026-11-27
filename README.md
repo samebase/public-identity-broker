@@ -1,8 +1,8 @@
 # public-identity-broker
 
-Google sign-in for any site, with no registration and no client secret. The broker runs at
-`https://login.samebase.com`. A site's `client_id` is the address of a small JSON file on the site's
-own host
+Google and GitHub sign-in for any site, with no registration and no client secret. The broker runs
+at `https://login.samebase.com`. A site's `client_id` is the address of a small JSON file on the
+site's own host
 ([OAuth Client ID Metadata Document](https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-03.html)).
 The broker keeps no user accounts: the site gets a standard OpenID Connect `id_token` and owns its
 users.
@@ -68,10 +68,10 @@ const tokens = await client.authorizationCodeGrant(config, currentUrl, {
 const { sub, email, name } = tokens.claims() ?? {};
 ```
 
-`sub` is `google:<Google's id of the user>`, the same at every broker of this package. The user sees
-the broker's page with your site's host before Google. The broker reads your file at the first
-sign-in, and again after its `Cache-Control: max-age` (1 hour without one, at most 24 hours). The
-package README has the
+`sub` is `google:<Google's id of the user>` or `github:<GitHub's id of the user>`, the same at every
+broker of this package. The user sees the broker's page with your site's host, and chooses Google or
+GitHub there. The broker reads your file at the first sign-in, and again after its
+`Cache-Control: max-age` (1 hour without one, at most 24 hours). The package README has the
 [full rules](https://github.com/samebase/samebase/blob/main/packages/identity-broker/README.md#sign-in-with-a-client-id-metadata-document).
 
 ## Operate
@@ -79,7 +79,7 @@ package README has the
 `.github/workflows/alchemy.yml` deploys the stack of `alchemy.run.ts`, one stage `prod`, on each
 push to `main`, or by hand with **Actions**, **alchemy**, **Run workflow**. Saving a secret does not
 start a run. The state is in the team's Convex store, under the stack name `<owner>/<repository>`.
-Pull requests get no preview deploy: Google accepts only the exact callback address.
+Pull requests get no preview deploy: a provider accepts only the exact callback address.
 
 The repository settings (**Settings**, **Secrets and variables**, **Actions**):
 
@@ -92,7 +92,10 @@ The repository settings (**Settings**, **Secrets and variables**, **Actions**):
 | `GOOGLE_CLIENT_SECRET`  | secret   | That client's secret.                                                                                                                                                                                                  |
 | `IDENTITY_BROKER_KEYS`  | secret   | The signing keys: the key set that the package README's [command](https://github.com/samebase/samebase/blob/main/packages/identity-broker/README.md#environment-variables) prints. Keep a copy: GitHub cannot show it. |
 
-| `IDENTITY_BROKER_MODERATION_KEY` | secret | A long random value, for example from
+| `AUTH_GITHUB_CLIENT_ID` | secret | A GitHub OAuth App (**Settings**, **Developer settings**,
+**OAuth Apps**) with the callback URL `https://login.samebase.com/connectors/github/callback`. | |
+`AUTH_GITHUB_CLIENT_SECRET` | secret | That app's client secret. | |
+`IDENTITY_BROKER_MODERATION_KEY` | secret | A long random value, for example from
 `openssl rand -hex 32`. Keep a copy: it is the Bearer token of the moderation API. |
 
 ### Block a host
@@ -124,12 +127,12 @@ verifying.
 
 ### What the broker stores, and for how long
 
-- No user accounts, no sessions, no passwords. Each sign-in goes to Google again.
+- No user accounts, no sessions, no passwords. Each sign-in goes to Google or GitHub again.
 - In its Durable Object: a card of each site's file, kept 24 hours after its last good read, or 14
   days after its last sign-in; and short-lived sign-in records (a sign-in lives 10 minutes, an
   access token 5). A daily cleanup removes the expired rows.
 - Workers Logs: one JSON line for each event, with no invocation logs, because a callback address
-  carries Google's code.
+  carries the provider's code.
 - Alchemy keeps the Worker's secrets in the state store, sealed (AES-256-GCM). A holder of the team
   token can read them: treat `CONVEX_ACCESS_TOKEN` and `CLOUDFLARE_API_TOKEN` as administrator
   credentials.
