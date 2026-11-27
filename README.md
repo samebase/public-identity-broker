@@ -25,8 +25,8 @@ service under [Samebase's terms](https://samebase.com/terms).
    }
    ```
 
-   `client_id` is the file's address, character for character, with no query and no port. Each
-   return address is https on the same origin as the file.
+   `client_id` is the file's address, character for character, with no query, no port, and the host
+   in lower case. Each return address is https on the same origin as the file.
 
 2. Set your OpenID Connect library to:
    - issuer `https://login.samebase.com`
@@ -83,20 +83,17 @@ Pull requests get no preview deploy: a provider accepts only the exact callback 
 
 The repository settings (**Settings**, **Secrets and variables**, **Actions**):
 
-| Name                    | Kind     | Value                                                                                                                                                                                                                  |
-| ----------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CONVEX_ACCESS_TOKEN`   | secret   | A Convex team access token of the team that holds `alchemy-state-store`.                                                                                                                                               |
-| `CLOUDFLARE_API_TOKEN`  | secret   | A Cloudflare account token: Workers Scripts Write and Account Settings Read on the account, and Workers Routes Write, DNS Write and Zone Read on the zone `samebase.com`.                                              |
-| `CLOUDFLARE_ACCOUNT_ID` | variable | The account that holds the zone `samebase.com`.                                                                                                                                                                        |
-| `GOOGLE_CLIENT_ID`      | secret   | A Web application client in the Google Auth Platform, with the redirect URI `https://login.samebase.com/connectors/google/callback`.                                                                                   |
-| `GOOGLE_CLIENT_SECRET`  | secret   | That client's secret.                                                                                                                                                                                                  |
-| `IDENTITY_BROKER_KEYS`  | secret   | The signing keys: the key set that the package README's [command](https://github.com/samebase/samebase/blob/main/packages/identity-broker/README.md#environment-variables) prints. Keep a copy: GitHub cannot show it. |
-
-| `AUTH_GITHUB_CLIENT_ID` | secret | A GitHub OAuth App (**Settings**, **Developer settings**,
-**OAuth Apps**) with the callback URL `https://login.samebase.com/connectors/github/callback`. | |
-`AUTH_GITHUB_CLIENT_SECRET` | secret | That app's client secret. | |
-`IDENTITY_BROKER_MODERATION_KEY` | secret | A long random value, for example from
-`openssl rand -hex 32`. Keep a copy: it is the Bearer token of the moderation API. |
+| Name                             | Kind     | Value                                                                                                                                                                                                                  |
+| -------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CONVEX_ACCESS_TOKEN`            | secret   | A Convex team access token of the team that holds `alchemy-state-store`.                                                                                                                                               |
+| `CLOUDFLARE_API_TOKEN`           | secret   | A Cloudflare account token: Workers Scripts Write and Account Settings Read on the account, and Workers Routes Write, DNS Write and Zone Read on the zone `samebase.com`.                                              |
+| `CLOUDFLARE_ACCOUNT_ID`          | variable | The account that holds the zone `samebase.com`.                                                                                                                                                                        |
+| `GOOGLE_CLIENT_ID`               | secret   | A Web application client in the Google Auth Platform, with the redirect URI `https://login.samebase.com/connectors/google/callback`.                                                                                   |
+| `GOOGLE_CLIENT_SECRET`           | secret   | That client's secret.                                                                                                                                                                                                  |
+| `IDENTITY_BROKER_KEYS`           | secret   | The signing keys: the key set that the package README's [command](https://github.com/samebase/samebase/blob/main/packages/identity-broker/README.md#environment-variables) prints. Keep a copy: GitHub cannot show it. |
+| `AUTH_GITHUB_CLIENT_ID`          | secret   | A GitHub OAuth App (**Settings**, **Developer settings**, **OAuth Apps**) with the callback URL `https://login.samebase.com/connectors/github/callback`.                                                               |
+| `AUTH_GITHUB_CLIENT_SECRET`      | secret   | That app's client secret.                                                                                                                                                                                              |
+| `IDENTITY_BROKER_MODERATION_KEY` | secret   | A long random value, for example from `openssl rand -hex 32`. Keep a copy: it is the Bearer token of the moderation API.                                                                                               |
 
 ### Block a host
 
@@ -122,15 +119,18 @@ verifying.
   network (`CF-Connecting-IP`). A request over the limit gets 429 with `Retry-After: 60`. The
   counters are Cloudflare's Workers rate limiting binding: they are kept for each Cloudflare
   location and are approximate. Each `/authorize` request can read a site's file and store a client.
-- **For the whole broker** (the package's defaults): 120 reads of files a minute and 30 new clients
-  an hour. More get 429.
+- **For each host** (the package's default): 5 sites at a time. One more gets 429.
+- **For the whole broker** (the package's defaults): 120 reads of files a minute and 200 new sites
+  an hour. More get 429. A site that the broker already knows keeps working when the reads are used
+  up.
 
 ### What the broker stores, and for how long
 
 - No user accounts, no sessions, no passwords. Each sign-in goes to Google or GitHub again.
 - In its Durable Object: a card of each site's file, kept 24 hours after its last good read, or 14
   days after its last sign-in; and short-lived sign-in records (a sign-in lives 10 minutes, an
-  access token 5). A daily cleanup removes the expired rows.
+  access token 5). A cleanup removes the expired rows every 10 minutes. The broker keeps no record
+  of who signed in.
 - Workers Logs: one JSON line for each event, with no invocation logs, because a callback address
   carries the provider's code.
 - Alchemy keeps the Worker's secrets in the state store, sealed (AES-256-GCM). A holder of the team

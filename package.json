@@ -11,7 +11,7 @@
     "test": "vp test"
   },
   "dependencies": {
-    "@samebase/identity-broker": "0.46.0",
+    "@samebase/identity-broker": "0.47.0",
     "effect": "4.1.4"
   },
   "devDependencies": {
