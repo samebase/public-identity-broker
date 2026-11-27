@@ -1,7 +1,7 @@
-// The broker Worker: `@samebase/identity-broker` with Google and the Client ID Metadata Document
-// layer for any host, behind a limit for each caller on `/authorize` (src/limit.ts). The signing
-// keys are the package's default, the secret IDENTITY_BROKER_KEYS. `alchemy deploy` binds the three
-// secrets to the Worker from the deploying shell's variables of the same names; alchemy.run.ts binds
+// The broker Worker: `@samebase/identity-broker` with Google, GitHub and the Client ID Metadata
+// Document layer for any host, behind a limit for each caller on `/authorize` (src/limit.ts). The
+// signing keys are the package's default, the secret IDENTITY_BROKER_KEYS. `alchemy deploy` binds
+// the keys and the providers' secrets to the Worker from the deploying shell's variables of the same names; alchemy.run.ts binds
 // the moderation key, which the broker reads in each request.
 import * as Cloudflare from "@alchemy.run/cloudflare";
 import { identityBroker } from "@samebase/identity-broker";
@@ -36,6 +36,10 @@ export default class Broker extends Cloudflare.Worker<Broker>()(
         Connectors.google({
           clientId: Config.Redacted("GOOGLE_CLIENT_ID"),
           clientSecret: Config.Redacted("GOOGLE_CLIENT_SECRET"),
+        }),
+        Connectors.github({
+          clientId: Config.Redacted("AUTH_GITHUB_CLIENT_ID"),
+          clientSecret: Config.Redacted("AUTH_GITHUB_CLIENT_SECRET"),
         }),
       ],
       registration: Registration.clientIdMetadataDocuments(),
